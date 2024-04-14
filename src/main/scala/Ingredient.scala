@@ -1,6 +1,7 @@
 import scala.collection.mutable.ArrayBuffer
 import scala.io.StdIn.readInt
 class Ingredient extends Item:
+    
     def displayItems(): Unit =
         println("[Ingredients Inventory]")//add conditions later base on category of ingredients
                                         //example wet,dry,non-perishable ingredients
