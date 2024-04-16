@@ -21,6 +21,7 @@ local.sbt
 # Metals
 .bloop/
 .metals/
+./project/
 metals.sbt
 
 # Target

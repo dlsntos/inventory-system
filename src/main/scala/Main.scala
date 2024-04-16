@@ -1,5 +1,6 @@
 import scala.io.StdIn.readLine // Scanner for string values
 import scala.io.StdIn.readInt  // Scanner for integer values
+
 // Prints will be updated later
 @main def main(): Unit =
   println("Bakery Inventory Management System\n")//SDGY
@@ -12,11 +13,11 @@ import scala.io.StdIn.readInt  // Scanner for integer values
       
   if choice == 1 then
     val baked_products = new Product() //instance of the product class
-    baked_products.menu()
+    // baked_products.menu()
 
   else if choice == 2 then
     val ingredients = new Ingredient()//function
-    ingredients.menu()
+    // ingredients.menu()
     
   else if choice == 3 then
     println("Exit")//temporary
