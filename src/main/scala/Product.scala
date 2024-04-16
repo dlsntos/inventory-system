@@ -7,7 +7,7 @@ class Product extends Item:
     private var _ingredients = new ArrayBuffer[String]
     private var _price: Double = 0.0
 
-    // setter and getter
+    // setters and getters
     def ingredients: ArrayBuffer[String] = _ingredients
     def ingredients_=(newIngredients: ArrayBuffer[String]) =
         _ingredients = newIngredients
