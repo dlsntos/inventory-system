@@ -1,32 +1,45 @@
-import scala.io.StdIn.readLine // Scanner for string values
-import scala.io.StdIn.readInt  // Scanner for integer values
+import scala.io.StdIn.* // Imports primarily for inputs
+import scala.util.*
+
 // Prints will be updated later
 @main def main(): Unit =
-  println("Bakery Inventory Management System\n")//SDGY
-  //login system removed
-  println("[1] Baked products inventory") 
-  println("[2] Ingredients inventory")
-  //println("[3] packaging supplies inventory") should we add this?  
-  println("[3] Exit\n")
-  print("Enter choice: "); val choice = readInt()
-      
-  if choice == 1 then
-    val baked_products = new Product() //instance of the product class
-    baked_products.menu()
+    var choice = 0 
+    while
+        choice != 3
+    do
+        // further nice formatting later
+        println("\nBakery Inventory Management System\n")
 
-  else if choice == 2 then
-    val ingredients = new Ingredient()//function
-    ingredients.menu()
-    
-  else if choice == 3 then
-    println("Exit")//temporary
-    
-     
-    // options for
-      // displaying items (already with potential calculation of spoilage/other shit or separate option nlng sya)
-        // pwede rin side thing lng un
-      // adding/deleting items
+        println("[1] Baked Products Inventory") 
+        println("[2] Ingredients Inventory")
+        println("[3] Exit\n")
 
-    // other key stuff to remember
-      // classes for Item, which will be inherited by Product and Ingredient classes?
-      // main.scala shall only contain the menu system, separate files for other functions (maybe)
+        print("Enter choice: ")
+
+        choice = Try(readInt()) match // enclosed in a try for non-integer input
+            case Success(c) => c match
+                // once no error found, proceed to evaluate option for next course of action (all return c to return to loop)
+
+                case 1 => { // ingredients processes
+                    println("Ingredients Menu")
+                    c
+                }
+
+                case 2 => { // products processes
+                    println("Products Menu")
+                    c
+                }
+
+                case 3 => { // exit program
+                    println("See you again.")
+                    c
+                }
+                case _ => { // invalid integer input
+                    println("Please input a valid integer !!!")
+                    c
+                }
+
+            case Failure(e) => {
+                println("Please input a valid integer !!!")
+                0 // to return back to loop
+            }

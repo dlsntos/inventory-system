@@ -1,27 +1,17 @@
 import scala.collection.mutable.ArrayBuffer
-import scala.io.StdIn.readInt
+
 class Product extends Item:
-    var baked_goods_inventory = new ArrayBuffer()
+    /* Product is a child of Item, specifying ingredients used to make product and a unit price
+    it is being sold for */
 
-    def displayItems(): Unit =
-        println("\n[Baked Goods]")// add values and conditions later 
-                                //conditions should have types of baked goods kung pwede
-    def addItem(): Unit =
-        println()// add function later
-    def removeItem(): Unit =
-        println()// add function later
-    def calculateSpoilage(): Unit =
-        println()// add function later
-    def menu(): Unit=
-        println("[1] Display Available Baked Products ")
-        println("[2] Add a new Baked product to inventory")
-        println("[3] Remove Baked good from inventory")
-        println("[4] Exit")
-        print("Enter choice: "); val choice = readInt()
+    private var _ingredients = new ArrayBuffer[String]
+    private var _price: Double = 0.0
 
-        if choice == 1 then
-            displayItems()
-        if choice == 2 then
-            removeItem()
-        if choice == 3 then
-            println("Exit")
+    // setters and getters
+    def ingredients: ArrayBuffer[String] = _ingredients
+    def ingredients_=(newIngredients: ArrayBuffer[String]) =
+        _ingredients = newIngredients
+    
+    def price: Double = _price
+    def price_=(newPrice: Double) =
+        _price = newPrice
