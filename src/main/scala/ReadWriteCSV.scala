@@ -26,6 +26,8 @@ def readIngredients: ArrayBuffer[Ingredient] =
         ingredients += newIngredient
     })
 
+    reader.close()
+
     ingredients
 
 def readProducts: ArrayBuffer[Product] =
@@ -53,4 +55,47 @@ def readProducts: ArrayBuffer[Product] =
         products += newProduct
     })
 
+    reader.close()
+
     products
+
+def writeIngredients(ingredients: ArrayBuffer[Ingredient]): Unit =
+    /* Write contents of an ArrayBuffer of Ingredients to ingredients.csv for updating current list of ingredients */
+    val writer = CSVWriter.open(new File("src/main/data/ingredients.csv"))
+
+    // create an Array line of Strings to insert each attribute to each index, then convert to List to write 
+    ingredients.foreach(ingredient => {
+        var line: Array[String] = new Array[String](6)
+        
+        line(0) = ingredient.name
+        line(1) = ingredient.cost.toString()
+        line(2) = ingredient.unit
+        line(3) = ingredient.quantity.toString()
+        line(4) = ingredient.limit.toString()
+        line(5) = ingredient.category
+
+        writer.writeRow(line.toList)
+    })
+
+    writer.close()
+
+def writeProducts(products: ArrayBuffer[Product]): Unit =
+    /* Write contents of an ArrayBuffer of Products to products.csv for updating current list of products */
+    val writer = CSVWriter.open(new File("src/main/data/products.csv"))
+
+    // create an Array line of Strings to insert each attribute to each index, then convert to List to write 
+    products.foreach(product => {
+        var line: Array[String] = new Array[String](7)
+
+        line(0) = product.name
+        line(1) = product.cost.toString()
+        line(2) = product.unit
+        line(3) = product.quantity.toString()
+        line(4) = product.limit.toString()
+        line(5) = product.ingredients.mkString("_") // convert ArrayBuffer to a single String separated by '_'
+        line(6) = product.price.toString()
+
+        writer.writeRow(line.toList)
+    })
+
+    writer.close()
