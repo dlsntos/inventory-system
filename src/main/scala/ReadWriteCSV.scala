@@ -2,100 +2,78 @@
 import com.github.tototoshi.csv._
 import scala.collection.mutable.ArrayBuffer
 import java.io.File
+import com.github.nscala_time.time.Imports.LocalDate
 
-def readIngredients: ArrayBuffer[Ingredient] =
-    /* Import contents of ingredients.csv to an ArrayBuffer of Ingredient objects */
-    var ingredients = new ArrayBuffer[Ingredient]
+def readInventory: List[Product] =
+    /** Generate an inventory containing individual Items and their related Product.
+     * 
+     * @return A List of Products with their associated items.
+     */
 
-    val reader = CSVReader.open(new File("src/main/data/ingredients.csv"))
+    // retrieve all products in raw List[List[String]]
+    val pReader = CSVReader.open(new File("src/main/data/products.csv"))
+    var rawProducts = pReader.all()
+    var products: List[Product] = Nil
+    pReader.close()
+
+    val iReader = CSVReader.open(new File("src/main/data/items.csv"))
+
+    // outer loop to iterate over each product
+    for i <- 0 to (rawProducts.size - 1) do
+        // create a new instance of Product and add it to products List
+        val product = new Product
+        product.name_=(rawProducts(i)(0))
+        product.price_=(rawProducts(i)(1).toDouble)
+        product.unit_=(rawProducts(i)(2))
+        product.limit_=(rawProducts(i)(3).toInt)
+        product.quantity_=(rawProducts(i)(4).toInt)
+        product.expiration_=(rawProducts(i)(5).toInt)
+
+        products = product :: products
+
+        // inner loop to iterate over each item line by line by the quantity of its associated product
+        for j <- 0 to (product.quantity - 1) do // 0 to 2
+            var line = iReader.readNext().getOrElse(Nil) // line 0
+            var item = product.Item(line(0), LocalDate.parse(line(1)))
+            product.addItem(item)
+
+    iReader.close()
     
-    // iterating through each line of the csv file
-    reader.foreach(line => {
-        // creating a new instance
-        var newIngredient = new Ingredient
+    products.reverse
 
-        // setting values through each element of line
-        newIngredient.name_=(line(0))
-        newIngredient.cost_=(line(1).toDouble)
-        newIngredient.unit_=(line(2))
-        newIngredient.quantity_=(line(3).toInt)
-        newIngredient.limit_=(line(4).toInt)
-        newIngredient.category_=(line(5))
+def writeInventory(inventory: List[Product]): Unit =
+    /** Writes back an inventory of products into products.csv and items.csv.
+     * 
+     * @param inventory a list of products
+     */
+    
+    // prepare writers
+    val pWriter = CSVWriter.open(new File("src/main/data/products.csv"))
+    val iWriter = CSVWriter.open(new File("src/main/data/items.csv"))
 
-        // adding the object to the array
-        ingredients += newIngredient
-    })
-
-    reader.close()
-
-    ingredients
-
-def readProducts: ArrayBuffer[Product] =
-    /* Import contents of products.csv to an ArrayBuffer of Product Objects */
-    var products = new ArrayBuffer[Product]
-
-    val reader = CSVReader.open(new File("src/main/data/products.csv"))
-
-    // iterating through each line of the csv file
-    reader.foreach(line => {
-        // creating a new instance
-        var newProduct = new Product
-
-        // setting values through each element of line
-        newProduct.name_=(line(0))
-        newProduct.cost_=(line(1).toDouble)
-        newProduct.unit_=(line(2))
-        newProduct.quantity_=(line(3).toInt)
-        newProduct.limit_=(line(4).toInt)
-        newProduct.ingredients_=(line(5).split('_').to(ArrayBuffer)) // converting ingredient elements to array buffer
-        newProduct.price_=(line(6).toDouble)
-
-
-        // adding the object to the array
-        products += newProduct
-    })
-
-    reader.close()
-
-    products
-
-def writeIngredients(ingredients: ArrayBuffer[Ingredient]): Unit =
-    /* Write contents of an ArrayBuffer of Ingredients to ingredients.csv for updating current list of ingredients */
-    val writer = CSVWriter.open(new File("src/main/data/ingredients.csv"))
-
-    // create an Array line of Strings to insert each attribute to each index, then convert to List to write 
-    ingredients.foreach(ingredient => {
+    // iterate over each product, create an array of a rowline and write to products.csv
+    inventory.foreach(product => {
         var line: Array[String] = new Array[String](6)
-        
-        line(0) = ingredient.name
-        line(1) = ingredient.cost.toString()
-        line(2) = ingredient.unit
-        line(3) = ingredient.quantity.toString()
-        line(4) = ingredient.limit.toString()
-        line(5) = ingredient.category
-
-        writer.writeRow(line.toList)
-    })
-
-    writer.close()
-
-def writeProducts(products: ArrayBuffer[Product]): Unit =
-    /* Write contents of an ArrayBuffer of Products to products.csv for updating current list of products */
-    val writer = CSVWriter.open(new File("src/main/data/products.csv"))
-
-    // create an Array line of Strings to insert each attribute to each index, then convert to List to write 
-    products.foreach(product => {
-        var line: Array[String] = new Array[String](7)
 
         line(0) = product.name
-        line(1) = product.cost.toString()
+        line(1) = product.price.toString
         line(2) = product.unit
-        line(3) = product.quantity.toString()
-        line(4) = product.limit.toString()
-        line(5) = product.ingredients.mkString("_") // convert ArrayBuffer to a single String separated by '_'
-        line(6) = product.price.toString()
+        line(3) = product.limit.toString
+        line(4) = product.quantity.toString
+        line(5) = product.expiration.toString
 
-        writer.writeRow(line.toList)
+        pWriter.writeRow(line.toList)
+
+        // for each product, write its items to items.csv in a similar fashion
+        product.items.reverse.foreach(item => {
+            line = new Array[String](2)
+            
+            line(0) = item.id
+            line(1) = item.expirationDate.toString
+
+            iWriter.writeRow(line.toList)
+        })
     })
 
-    writer.close()
+    pWriter.close()
+    iWriter.close()
