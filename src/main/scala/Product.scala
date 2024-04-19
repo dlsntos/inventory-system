@@ -1,4 +1,6 @@
-import java.util.Date
+import com.github.nscala_time.time.Imports._
+import scala.util.Random
+
 class Product:
     /** A product existing in the inventory.
      * 
@@ -19,8 +21,31 @@ class Product:
     private var _expiration: Int = 0
     private var _items: List[Item] = Nil
 
+    // getters and setters
+    def name: String = _name
+    def name_=(newVal: String) = _name = newVal
+
+    def price: Double = _price
+    def price_=(newVal: Double) = _price = newVal
+
+    def unit: String = _unit
+    def unit_=(newVal: String) = _unit = newVal
+
+    def limit: Int = _limit
+    def limit_=(newVal: Int) = _limit = newVal
+
+    def quantity: Int = _quantity
+    def quantity_=(newVal: Int) = _quantity = newVal
+
+    def expiration: Int = _expiration
+    def expiration_=(newVal: Int) = _expiration = newVal
+
+    // other methods
     def addItem(item: Item): Unit =
         _items = item :: _items
+
+    /** Calculates the total price of the product */
+    def getTotalPrice: Double = _price * _quantity
 
     class Item():
         /** Instance of a particular product.
@@ -29,5 +54,26 @@ class Product:
          * @param expirationDate specific date of expiration, calculated with product expiration
          */
 
-        private var _id: String = ""
-        private var _expirationDate: Date = ""
+        private var _id: String = generateId()
+        private var _expirationDate: LocalDate = generateExpirationDate()
+
+        // auxiliary constructor for if id and expirationdate had been instantiated before
+        def this(id: String, expirationDate: LocalDate) =
+            this()
+            _id = id
+            _expirationDate = expirationDate
+
+        // getters and setters
+        def id: String = _id
+        def id_=(newVal: String) = _id = newVal
+
+        def expirationDate: LocalDate = _expirationDate
+        def expirationDate_=(newVal: LocalDate) = _expirationDate = newVal
+
+        /** Generates a random ID ranging from 11111 to 99999 */
+        private def generateId() =
+            val rnd = new Random
+            rnd.between(11111, 99999).toString
+        
+        private def generateExpirationDate() =
+            (LocalDate.now() + (Product.this.expiration).days)
