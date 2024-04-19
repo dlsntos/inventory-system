@@ -4,7 +4,7 @@ This is a sample inventory management system created using Scala 3. In partial r
 
 ## Authors
 
-Francine Louise Sanchez ([@luizaki](https://github.com/luizaki))
-Dean Louis Santos ([@dlsntos](https://github.com/dlsntos))
-Aidan Zabdiel Serrano
+Francine Louise Sanchez ([@luizaki](https://github.com/luizaki))<br />
+Dean Louis Santos ([@dlsntos](https://github.com/dlsntos))<br />
+Aidan Zabdiel Serrano<br />
 Christian Joshua Quiambao
