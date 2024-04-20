@@ -1,52 +1,39 @@
-// code below derived from other files, to rework later
+def searchProduct(input: String): Option[Product] =
+    val products: List[Product] = readInventory
+    var resultProduct: Product = null
 
-import scala.collection.mutable.ArrayBuffer
-import scala.io.StdIn.readInt
+    var matchFound = false
+    products.foreach(product => {
+        if product.name.toUpperCase().equals(input.toUpperCase()) then
+            matchFound = true
+            resultProduct = product
+    })
 
-def displayItems(): Unit =
-    println("[Ingredients Inventory]")//add conditions later base on category of ingredients
-                                    //example wet,dry,non-perishable ingredients
-def addItem(): Unit  =
-    println("")// add function later
-def removeItem(): Unit =
-    println("")// add function later
-def calculateSpoilage(): Unit =
-    println("")// add function later
-def menu(): Unit =
-    println("[1] Display Available Ingredients ")
-    println("[2] Restock ingredients")
-    println("[3] Remove Expired/unusable ingredients")
-    println("[4] Exit")
-    print("Enter choice: "); val choice = readInt()
-    
-    if choice == 1 then
-        displayItems()
-    if choice == 2 then
-        removeItem()
-    if choice == 3 then
-        println("Exit")
+    Option(resultProduct)
 
-var baked_goods_inventory = new ArrayBuffer()
+def addItem(product: Product): Either[String, Unit] =
+    if product.quantity + 1 > product.limit then            
+        var products: List[Product] = readInventory
 
-// def displayItems(): Unit =
-//     println("\n[Baked Goods]")// add values and conditions later 
-//                             //conditions should have types of baked goods kung pwede
-// def addItem(): Unit =
-//     println()// add function later
-// def removeItem(): Unit =
-//     println()// add function later
-// def calculateSpoilage(): Unit =
-//     println()// add function later
-// def menu(): Unit=
-//     println("[1] Display Available Baked Products ")
-//     println("[2] Add a new Baked product to inventory")
-//     println("[3] Remove Baked good from inventory")
-//     println("[4] Exit")
-//     print("Enter choice: "); val choice = readInt()
+        products.foreach(p => {
+            if product.name.equals(p.name) then
+                p.addItem(new p.Item())
+        })
 
-//     if choice == 1 then
-//         displayItems()
-//     if choice == 2 then
-//         removeItem()
-//     if choice == 3 then
-//         println("Exit")
+        Right(writeInventory(products))
+    else Left("You have already exceeded the max stock for this product !!!")
+
+def removeSpoilages(product: Product): Either[String, Int] =
+    var products: List[Product] = readInventory
+    var totalSpoilage: Int = 0
+
+    products.foreach(p => {
+        totalSpoilage += p.getSpoilageCount
+        p.removeSpoilage
+    })
+
+    if totalSpoilage == 0 then
+        Left("There are no spoiled items to remove !!!")
+    else
+        writeInventory(products)
+        Right(totalSpoilage)
