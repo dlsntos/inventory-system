@@ -89,7 +89,7 @@ class Product:
 
         def expirationDate: LocalDate = _expirationDate
         def expirationDate_=(newVal: LocalDate) = _expirationDate = newVal
-        def expirationDate_=() = generateExpirationDate()
+        def expirationDate_=(newLength: Int) = _expirationDate = (_expirationDate - (Product.this.expiration).days) + newLength.days
 
         /** Generates a random ID ranging from 11111 to 99999 */
         private def generateId() =

@@ -94,6 +94,7 @@ def addProduct: Unit =
         }
         case _ => return println("Cancelling add product ...")
 
+/** Takes user inputs on what field to update, asks confirmation, and applies updates accordingly without contradictions */
 def updateProduct: Unit =
     print("Enter full name of product to update > ")
 
@@ -104,6 +105,7 @@ def updateProduct: Unit =
             print("[N]ame, [U]nit, [L]imit, [P]rice, [E]xpiraton > ")
 
             readLine().toUpperCase match
+                // new name
                 case "N" => {
                     print("Type in the new name > ")                    
                     var newName = readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
@@ -125,6 +127,7 @@ def updateProduct: Unit =
                         case _ => return println("Cancelling rename ...")
                 }
 
+                // new unit
                 case "U" => {
                     print("Type in the new unit measurement > ")                    
                     var newUnit = readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
@@ -146,6 +149,7 @@ def updateProduct: Unit =
                         case _ => return println("Cancelling update ...")
                 }
 
+                // new limit
                 case "L" => {
                     print("Type in the new limit > ")
 
@@ -161,17 +165,21 @@ def updateProduct: Unit =
                                     var products = readInventory
 
                                     products.foreach(product => {
-                                        if product.name.equals(p.name) then product.limit_=(newLimit)
-                                        writeInventory(products)
+                                        if product.name.equals(p.name) then
+                                            if product.quantity > newLimit then
+                                                return println("Update unsuccessful: current amount of stuck exceeds new desired limit! Please remove some items first before updating.")
+                                            else
+                                                product.limit_=(newLimit)
+                                                writeInventory(products)
+                                                return println("\nUpdate successful!")
                                     })
-
-                                    return println("\nUpdate successful!")
                                 }
                                 case _ => return println("Cancelling update ...")
                         }
                         case Failure(e) => return println("Please input a number !!!")
                 }
 
+                // new price
                 case "P" => {
                     print("Type in the new price > ")                    
                     Try(readLine().toDouble) match
@@ -197,6 +205,7 @@ def updateProduct: Unit =
                         case Failure(e) => return println("Please input a number !!!")
                 }
 
+                // new expiration
                 case "E" => {
                     print("Type in the new expiration length > ")
 
@@ -211,9 +220,12 @@ def updateProduct: Unit =
                                 case "Y" => {
                                     var products = readInventory
 
+                                    // update expiration dates of existing items
                                     products.foreach(product => {
-                                        if product.name.equals(p.name) then product.expiration_=(newExpiration)
-                                        writeInventory(products)
+                                        if product.name.equals(p.name) then
+                                            product.items.foreach(item => item.expirationDate_=(newExpiration))
+                                            product.expiration_=(newExpiration)
+                                            writeInventory(products)
                                     })
 
                                     return println("\nUpdate successful!")
