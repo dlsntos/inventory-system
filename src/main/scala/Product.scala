@@ -40,12 +40,29 @@ class Product:
     def expiration: Int = _expiration
     def expiration_=(newVal: Int) = _expiration = newVal
 
-    // other methods
+    def items: List[Item] = _items
+    def items_=(newVal: List[Item]) = _items = newVal
+
+    /** adds a new Item affiliated with the Product. */
     def addItem(item: Item): Unit =
         _items = item :: _items
 
     /** Calculates the total price of the product */
     def getTotalPrice: Double = _price * _quantity
+
+    /** Finds all spoiled Items of a Product */
+    def getSpoiledItems: List[Item] =
+        var spoiled: List[Item] = Nil
+
+        _items.foreach(item => {
+            if item.expirationDate <= LocalDate.now()
+            then spoiled = item :: spoiled
+        })
+
+        spoiled
+    
+    /** Calculates number of spoiled items */
+    def getSpoilageCount: Int = getSpoiledItems.size
 
     class Item():
         /** Instance of a particular product.
