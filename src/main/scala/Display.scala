@@ -43,7 +43,7 @@ def displayInventory: Any =
             displayRow(products(i))
 
         // next options of user
-        println("\n[P]revious, [N]ext, [A]dd Item, [R]emove Spoilages, [E]xit")
+        println("\n[P]revious, [N]ext, [A]dd Item, [D]elete Item, [R]emove Spoilages, [E]xit")
         print("Choose an action > ")
         var option = readLine().toUpperCase() match
             // previous and next designed to loop back around if page reaches start/end
@@ -67,6 +67,26 @@ def displayInventory: Any =
                         addItem(p) match
                             case Right(r) => {
                                 println(s"Successfully added a new ${p.unit.toLowerCase()} of ${p.name}!")
+
+                                // refresh displayInventory
+                                keepDisplaying = false
+                                displayInventory
+                            }
+                            case Left(l) => println(l)
+                    }
+                    case None => println("Product not found !!!")
+            }
+
+            case "D" => {
+                print("Input full name of product > ")
+
+                // error handling using Option-Some-None on whether product input exists
+                searchProduct(readLine()) match
+                    case Some(p) => {
+                        // error handling using Either-Left-Right on whether adding will reach negative
+                        deleteItem(p) match
+                            case Right(r) => {
+                                println(s"Successfully removed one ${p.unit.toLowerCase()} of ${p.name}!")
 
                                 // refresh displayInventory
                                 keepDisplaying = false

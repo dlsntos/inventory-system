@@ -23,6 +23,18 @@ def addItem(product: Product): Either[String, Unit] =
         Right(writeInventory(products))
     else Left("\nYou have already exceeded the max stock for this product !!!")
 
+def deleteItem(product: Product): Either[String, Unit] =
+    if (product.quantity - 1) >= 0 then            
+        var products: List[Product] = readInventory
+
+        products.foreach(p => {
+            if product.name.equals(p.name) then
+                p.items_=(p.items.slice(0, p.quantity - 1))
+        })
+
+        Right(writeInventory(products))
+    else Left("\nYou have already exceeded the max stock for this product !!!")
+
 def removeSpoilages: Either[String, Int] =
     var products: List[Product] = readInventory
     var totalSpoilage: Int = 0
