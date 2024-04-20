@@ -12,7 +12,7 @@ def searchProduct(input: String): Option[Product] =
     Option(resultProduct)
 
 def addItem(product: Product): Either[String, Unit] =
-    if product.quantity + 1 > product.limit then            
+    if (product.quantity + 1) <= product.limit then            
         var products: List[Product] = readInventory
 
         products.foreach(p => {
@@ -21,9 +21,9 @@ def addItem(product: Product): Either[String, Unit] =
         })
 
         Right(writeInventory(products))
-    else Left("You have already exceeded the max stock for this product !!!")
+    else Left("\nYou have already exceeded the max stock for this product !!!")
 
-def removeSpoilages(product: Product): Either[String, Int] =
+def removeSpoilages: Either[String, Int] =
     var products: List[Product] = readInventory
     var totalSpoilage: Int = 0
 
@@ -33,7 +33,7 @@ def removeSpoilages(product: Product): Either[String, Int] =
     })
 
     if totalSpoilage == 0 then
-        Left("There are no spoiled items to remove !!!")
+        Left("\nThere are no spoiled items to remove !!!")
     else
         writeInventory(products)
         Right(totalSpoilage)
