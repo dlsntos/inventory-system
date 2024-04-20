@@ -8,7 +8,7 @@ class Product:
      * @param price unit price of the product
      * @param unit unit measurement (eg. pieace, kg)
      * @param limit maximum quantity in the inventory
-     * @param quantity current amount of item
+     * @param quantity current amount of items, always dependent on items
      * @param expiration number of days before spoilage
      * @param items list of items (instances) of this product
      */
@@ -34,21 +34,21 @@ class Product:
     def limit: Int = _limit
     def limit_=(newVal: Int) = _limit = newVal
 
-    def quantity: Int = _quantity
-    def quantity_=(newVal: Int) = _quantity = newVal
-
     def expiration: Int = _expiration
     def expiration_=(newVal: Int) = _expiration = newVal
 
     def items: List[Item] = _items
     def items_=(newVal: List[Item]) = _items = newVal
 
-    /** adds a new Item affiliated with the Product. */
+    /** Calculates quantity based on current number of items. */
+    def quantity: Int = _items.size
+
+    /** Adds a new Item affiliated with the Product. */
     def addItem(item: Item): Unit =
         _items = item :: _items
 
     /** Calculates the total price of the product */
-    def getTotalPrice: Double = _price * _quantity
+    def getTotalPrice: Double = _price * quantity
 
     /** Finds all spoiled Items of a Product */
     def getSpoiledItems: List[Item] =
@@ -63,6 +63,9 @@ class Product:
     
     /** Calculates number of spoiled items */
     def getSpoilageCount: Int = getSpoiledItems.size
+
+    /** Removes all spoiled items */
+    def removeSpoilage =_items = _items.filter(!getSpoiledItems.contains(_))
 
     class Item():
         /** Instance of a particular product.

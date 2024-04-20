@@ -1,6 +1,5 @@
 
 import com.github.tototoshi.csv._
-import scala.collection.mutable.ArrayBuffer
 import java.io.File
 import com.github.nscala_time.time.Imports.LocalDate
 
@@ -26,13 +25,12 @@ def readInventory: List[Product] =
         product.price_=(rawProducts(i)(1).toDouble)
         product.unit_=(rawProducts(i)(2))
         product.limit_=(rawProducts(i)(3).toInt)
-        product.quantity_=(rawProducts(i)(4).toInt)
         product.expiration_=(rawProducts(i)(5).toInt)
 
         products = product :: products
 
         // inner loop to iterate over each item line by line by the quantity of its associated product
-        for j <- 0 to (product.quantity - 1) do // 0 to 2
+        for j <- 0 to (rawProducts(i)(4).toInt - 1) do // 0 to 2
             var line = iReader.readNext().getOrElse(Nil) // line 0
             var item = product.Item(line(0), LocalDate.parse(line(1)))
             product.addItem(item)
