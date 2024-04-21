@@ -107,7 +107,9 @@ def updateProduct: Unit =
             readLine().toUpperCase match
                 // new name
                 case "N" => {
-                    print("Type in the new name > ")                    
+                    print("Type in the new name > ")
+
+                    // ensures that the name will be in capital first letter format                  
                     var newName = readLine().toLowerCase.split(' ').map(_.capitalize).mkString(" ")
 
                     println(s"Changing ${p.name} >> $newName")
@@ -155,6 +157,8 @@ def updateProduct: Unit =
 
                     Try(readLine().toInt) match
                         case Success(s) => {
+                            if s < 1 then return println("You cannot have a limit of 0 or less !!!")
+
                             var newLimit = s
 
                             println(s"Changing ${p.limit} >> $newLimit")
@@ -211,6 +215,9 @@ def updateProduct: Unit =
 
                     Try(readLine().toInt) match
                         case Success(s) => {
+                            // checks first if expiration is greater than 0
+                            if s < 0 then return println("You cannot have an expiration date of 0 or less !!!")
+
                             var newExpiration = s
 
                             println(s"Changing ${p.expiration} >> $newExpiration")
@@ -234,7 +241,6 @@ def updateProduct: Unit =
                         }
                         case Failure(e) => return println("Please input a number !!!")
                 }
-
                 case _ => return println("That is not a valid option !!!")
         }
         case None => return println("Product does not exist !!!")
@@ -246,6 +252,7 @@ def deleteProduct: Unit =
     // check if product exists for it to be deleted
     searchProduct(readLine()) match
         case Some(p) => {
+            // confirmation
             println(s"\nYou will be deleting ${p.name} with ${p.quantity} item/s.")
             print("Type 'Y' to confirm > ")
 

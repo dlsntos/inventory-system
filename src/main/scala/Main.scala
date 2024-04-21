@@ -1,4 +1,4 @@
-import scala.io.StdIn.* // Imports primarily for inputs
+import scala.io.StdIn.*
 import scala.util.*
 
 @main def main(): Unit =
@@ -6,7 +6,6 @@ import scala.util.*
     while
         choice != 3
     do
-        // further nice formatting later
         println("\n[ Inventory Management System ]\n")
 
         println("[1] Manage Inventory")
