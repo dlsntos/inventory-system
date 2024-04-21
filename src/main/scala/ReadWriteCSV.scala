@@ -1,4 +1,3 @@
-
 import com.github.tototoshi.csv._
 import java.io.File
 import com.github.nscala_time.time.Imports.LocalDate
@@ -19,21 +18,23 @@ def readInventory: List[Product] =
 
     // outer loop to iterate over each product
     for i <- 0 to (rawProducts.size - 1) do
-        // create a new instance of Product and add it to products List
-        val product = new Product
-        product.name_=(rawProducts(i)(0))
-        product.price_=(rawProducts(i)(1).toDouble)
-        product.unit_=(rawProducts(i)(2))
-        product.limit_=(rawProducts(i)(3).toInt)
-        product.expiration_=(rawProducts(i)(5).toInt)
+        try// create a new instance of Product and add it to products List
+            val product = new Product
+            product.name_=(rawProducts(i)(0))
+            product.price_=(rawProducts(i)(1).toDouble)
+            product.unit_=(rawProducts(i)(2))
+            product.limit_=(rawProducts(i)(3).toInt)
+            product.expiration_=(rawProducts(i)(5).toInt)
 
-        products = product :: products
+            products = product :: products
 
-        // inner loop to iterate over each item line by line by the quantity of its associated product
-        for j <- 0 to (rawProducts(i)(4).toInt - 1) do // 0 to 2
-            var line = iReader.readNext().getOrElse(Nil) // line 0
-            var item = product.Item(line(0), LocalDate.parse(line(1)))
-            product.addItem(item)
+            // inner loop to iterate over each item line by line by the quantity of its associated product
+            for j <- 0 to (rawProducts(i)(4).toInt - 1) do // 0 to 2
+                var line = iReader.readNext().getOrElse(Nil) // line 0
+                var item = product.Item(line(0), LocalDate.parse(line(1)))
+                product.addItem(item)
+        catch
+            case e: IndexOutOfBoundsException => println()
 
     iReader.close()
     
