@@ -42,6 +42,11 @@ def displayInventory: Any =
         for i <- startIndex to endIndex - 1 do
             displayRow(products(i))
 
+        // print summary stats
+        println(s"\nTotal In Stock:\t$totalInventory")
+        println(s"Maximum Stock:\t$maxInventory")
+        println(s"Storage left:\t${maxInventory - totalInventory}")
+
         // next options of user
         println("\n[P]revious, [N]ext, [A]dd Item, [D]elete Item, [R]emove Spoilages, [E]xit")
         print("Choose an action > ")

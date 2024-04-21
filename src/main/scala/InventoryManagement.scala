@@ -1,3 +1,23 @@
+/** Gets the total number of items in the inventory. */
+def totalInventory: Int =
+    var total: Int = 0
+
+    readInventory.foreach(product => {
+        total += product.quantity
+    })
+
+    total
+
+/** Gets the maximum number of the items in the inventory. */
+def maxInventory: Int =
+    var max: Int = 0
+
+    readInventory.foreach(product => {
+        max += product.limit
+    })
+
+    max
+
 def searchProduct(input: String): Option[Product] =
     /** Checks the inputted product name in the inventory and returns the respective Product.
      * 
